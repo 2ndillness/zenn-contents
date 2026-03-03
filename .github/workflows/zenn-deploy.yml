@@ -1,5 +1,8 @@
 name: Zenn Deploy (main → zenn-deploy)
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
