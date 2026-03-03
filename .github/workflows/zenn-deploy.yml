@@ -1,0 +1,43 @@
+name: Zenn Deploy (main → zenn-deploy)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  convert-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (if needed)
+        run: |
+          npm init -y
+          npm install glob
+
+      - name: Run image path converter
+        run: node scripts/convert-image-paths.js
+
+      - name: Commit converted files to zenn-deploy
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          # 新しいブランチをチェックアウト（存在しなければ作成）
+          git checkout -B zenn-deploy
+
+          # main の変換済みファイルを zenn-deploy に反映
+          git add .
+          git commit -m "chore: convert image paths for Zenn" || echo "No changes"
+
+          git push origin zenn-deploy --force
