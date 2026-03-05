@@ -24,8 +24,11 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      - name: Install dependencies (ci)
         run: npm ci
+
+      - name: Ensure glob is available
+        run: npm install glob --no-save
 
       - name: Run image path converter
         run: node scripts/convert-image-paths.js
