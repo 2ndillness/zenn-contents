@@ -1,8 +1,10 @@
 name: Zenn Deploy (main → zenn-deploy)
 
+# 書き込み権限
 permissions:
   contents: write
 
+# mainブランチにプッシュがトリガー
 on:
   push:
     branches:
@@ -23,11 +25,11 @@ jobs:
         with:
           node-version: 22
 
+      # ランタイムのインストール
       - name: Install dependencies (if needed)
-        run: |
-          npm init -y
-          npm install glob
+        run: npm install glob --no-save
 
+      # パス変換スクリプト
       - name: Run image path converter
         run: node scripts/convert-image-paths.js
 
@@ -39,7 +41,7 @@ jobs:
           # 新しいブランチをチェックアウト（存在しなければ作成）
           git checkout -B zenn-deploy
 
-          # main の変換済みファイルを zenn-deploy に反映
+          # 変換済みファイルを zenn-deploy に反映
           git add .
           git commit -m "chore: convert image paths for Zenn" || echo "No changes"
 
