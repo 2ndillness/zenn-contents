@@ -1,5 +1,3 @@
-// scripts/convert-image-paths.js
-
 const fs = require("fs");
 const glob = require("glob");
 
@@ -13,15 +11,18 @@ const convertImagePaths = (text) => {
   const lines = text.split("\n");
   let inCodeBlock = false;
   const result = [];
+  // コードブロックフェンス
+  const FENCE_REGEX = /^ {0,3}(`{3,}|~{3,}).*$/;
 
   for (let line of lines) {
-    // コードブロック内は除外
-    if (line.trim().startsWith("```")) {
+    // コードブロックの開始/終了かを判定
+    if (FENCE_REGEX.test(line)) {
       inCodeBlock = !inCodeBlock;
       result.push(line);
-      continue;
+      continue; // フェンス行自体は置換対象外
     }
 
+    // コードブロック外の場合のみパスを置換
     if (!inCodeBlock) {
       line = line.replace(
         REL_IMG_REGEX,
