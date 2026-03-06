@@ -24,10 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
 
       # ランタイムのインストール
-      - name: Install dependencies (if needed)
-        run: npm install glob --no-save
+      - name: Install dependencies
+        run: npm ci
 
       # パス変換スクリプト
       - name: Run image path converter
